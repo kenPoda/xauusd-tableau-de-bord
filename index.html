@@ -1,0 +1,30 @@
+import { Card, CardContent } from "@/components/ui/card"; import { Button } from "@/components/ui/button"; import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"; import { useState, useEffect } from "react";
+
+const mockData = [ { time: "08:00", price: 2320 }, { time: "09:00", price: 2324 }, { time: "10:00", price: 2318 }, { time: "11:00", price: 2332 }, { time: "12:00", price: 2328 }, ];
+
+const StrategyAdvice = () => { // Simulation d'analyse const [advice, setAdvice] = useState("Chargement...");
+
+useEffect(() => { // Analyse basique simulée const latest = mockData[mockData.length - 1].price; const previous = mockData[0].price; if (latest > previous + 10) setAdvice("Breakout haussier détecté. Achat conseillé."); else if (latest < previous - 10) setAdvice("Breakout baissier détecté. Vente conseillée."); else setAdvice("Marché en range. Attendre confirmation."); }, []);
+
+return ( <Card className="mb-4"> <CardContent> <h2 className="text-xl font-bold mb-2">Stratégie AI</h2> <p>{advice}</p> </CardContent> </Card> ); };
+
+export default function Dashboard() { return ( <div className="p-4 grid grid-cols-1 gap-4 max-w-4xl mx-auto"> <Card> <CardContent> <h1 className="text-2xl font-bold mb-2">Tableau de bord XAU/USD</h1> <p>Prix en temps réel : <strong>2328.00 USD</strong></p> </CardContent> </Card>
+
+<StrategyAdvice />
+
+  <Card>
+    <CardContent>
+      <h2 className="text-xl font-bold mb-2">Graphique simplifié</h2>
+      <ResponsiveContainer width="100%" height={200}>
+        <LineChart data={mockData}>
+          <XAxis dataKey="time" />
+          <YAxis domain={[2310, 2340]} />
+          <Tooltip />
+          <Line type="monotone" dataKey="price" stroke="#8884d8" strokeWidth={2} />
+        </LineChart>
+      </ResponsiveContainer>
+    </CardContent>
+  </Card>
+</div>
+
+); }
